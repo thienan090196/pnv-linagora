@@ -17,37 +17,14 @@
  * under the License.                                           *
  ****************************************************************/
 
-package com.linagora.pnv.jpa.quota.model;
+package com.linagora.pnv;
 
-/*
-Question 1 :
+public interface StoreCurrentQuotaManager extends CurrentQuotaManager {
 
-Add the JPA table definition. You can have a look in org.apache.james.mailbox.jpa.mail.model.JPAUserFlag
- */
-public class MaxUserStorage {
-    /*
-    Question 2 :
+    MailboxListener.ListenerType getAssociatedListenerType();
 
-    Add quotaRoot as a primary key
-     */
-    private String quotaRoot;
+    void increase(QuotaRoot quotaRoot, long count, long size) throws MailboxException;
 
-    /*
-    Question 3 :
+    void decrease(QuotaRoot quotaRoot, long count, long size) throws MailboxException;
 
-    Add value as a column
-     */
-    private long value;
-
-    public MaxUserStorage(String quotaRoot, long value) {
-        this.quotaRoot = quotaRoot;
-        this.value = value;
-    }
-
-    public MaxUserStorage() {
-    }
-
-    public long getValue() {
-        return value;
-    }
 }

@@ -17,37 +17,12 @@
  * under the License.                                           *
  ****************************************************************/
 
-package com.linagora.pnv.jpa.quota.model;
+package com.linagora.pnv.jpa.quota;
 
-/*
-Question 1 :
-
-Add the JPA table definition. You can have a look in org.apache.james.mailbox.jpa.mail.model.JPAUserFlag
- */
-public class MaxUserMessageCount {
-    /*
-    Question 2 :
-
-    Add quotaRoot as a primary key
-     */
-    private String quotaRoot;
+public class JPACurrentQuotaManagerTest {
 
     /*
-    Question 3 :
-
-    Add value as a column
+    Reuse tests written for InMemoryCurrentQuotaManagerTest
      */
-    private long value;
 
-    public MaxUserMessageCount(String quotaRoot, long value) {
-        this.quotaRoot = quotaRoot;
-        this.value = value;
-    }
-
-    public MaxUserMessageCount() {
-    }
-
-    public long getValue() {
-        return value;
-    }
 }

@@ -26,10 +26,7 @@
     <persistence-unit name="global" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
-        <class>com.linagora.pnv.jpa.quota.model.MaxDefaultStorage</class>
-        <class>com.linagora.pnv.jpa.quota.model.MaxUserMessageCount</class>
-        <class>com.linagora.pnv.jpa.quota.model.MaxUserStorage</class>
-        <class>com.linagora.pnv.jpa.quota.model.MaxDefaultMessageCount</class>
+        <class>com.linagora.pnv.jpa.quota.model.JpaCurrentQuota</class>
 
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
 

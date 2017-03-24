@@ -17,38 +17,15 @@
  * under the License.                                           *
  ****************************************************************/
 
-package com.linagora.pnv.jpa.quota.model;
+package com.linagora.pnv;
 
-/*
-Question 1 :
-
-Add the JPA table definition. You can have a look in org.apache.james.mailbox.jpa.mail.model.JPAUserFlag
+/**
+ * This interface allows us to get the current value associated to a quota value
  */
-public class MaxDefaultStorage {
-    public static final String DEFAULT_KEY = "default_key";
-    /*
-    Question 2 :
+public interface CurrentQuotaManager {
 
-    Add quotaRoot as a primary key
-     */
-    private String quotaRoot;
+    long getCurrentMessageCount(QuotaRoot quotaRoot) throws MailboxException;
 
-    /*
-    Question 3 :
+    long getCurrentStorage(QuotaRoot quotaRoot) throws MailboxException;
 
-    Add value as a column
-     */
-    private long value;
-
-    public MaxDefaultStorage(long value) {
-        this.quotaRoot = DEFAULT_KEY;
-        this.value = value;
-    }
-
-    public MaxDefaultStorage() {
-    }
-
-    public long getValue() {
-        return value;
-    }
 }

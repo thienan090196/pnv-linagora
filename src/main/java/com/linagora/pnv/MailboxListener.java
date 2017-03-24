@@ -17,15 +17,33 @@
  * under the License.                                           *
  ****************************************************************/
 
-package com.linagora.pnv.memory.quota;
+package com.linagora.pnv;
 
-import com.linagora.pnv.GenericMaxQuotaManagerTest;
-import com.linagora.pnv.MaxQuotaManager;
+import java.io.Serializable;
+import java.util.List;
 
-public class InMemoryPerUserMaxQuotaManagerTest extends GenericMaxQuotaManagerTest {
 
-    protected MaxQuotaManager provideMaxQuotaManager() {
-        return new InMemoryPerUserMaxQuotaManager();
+
+/**
+ * Listens to <code>Mailbox</code> events.<br>
+ * Note that listeners may be removed asynchronously.
+ */
+public interface MailboxListener {
+
+    enum ListenerType {
+        ONCE,
+        EACH_NODE,
+        MAILBOX
     }
 
+    enum ExecutionMode {
+        SYNCHRONOUS,
+        ASYNCHRONOUS
+    }
+
+    ListenerType getType();
+
+    ExecutionMode getExecutionMode();
+
+    
 }

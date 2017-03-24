@@ -25,102 +25,90 @@ import javax.persistence.EntityManagerFactory;
 import org.apache.commons.lang.NotImplementedException;
 
 import com.linagora.pnv.MailboxException;
-import com.linagora.pnv.MaxQuotaManager;
+import com.linagora.pnv.MailboxListener;
 import com.linagora.pnv.QuotaRoot;
+import com.linagora.pnv.StoreCurrentQuotaManager;
+import com.linagora.pnv.jpa.quota.model.JpaCurrentQuota;
 
+/*
+Question 4.5
 
-public class JPAPerUserMaxQuotaManager implements MaxQuotaManager {
+Don't forget to clear your table in the tests :
+
+org.apache.james.mailbox.jpa.EntityManagerFactorySupplier
+ */
+public class JpaCurrentQuotaManager implements StoreCurrentQuotaManager {
 
     private final EntityManager entityManager;
 
-    public JPAPerUserMaxQuotaManager(EntityManagerFactory entityManagerFactory) {
+    public JpaCurrentQuotaManager(EntityManagerFactory entityManagerFactory) {
         this.entityManager = entityManagerFactory.createEntityManager();
     }
 
     @Override
-    public void setMaxStorage(QuotaRoot quotaRoot, long maxStorageQuota) throws MailboxException {
+    public MailboxListener.ListenerType getAssociatedListenerType() {
+        return MailboxListener.ListenerType.ONCE;
+    }
+
+    @Override
+    public long getCurrentMessageCount(QuotaRoot quotaRoot) throws MailboxException {
         /*
         Question 5
 
-        Persist a new MaxUserStorage for this quotaRoot.
-        Wrap it into a transaction.
+        Using retrieveUserQuota return the current message count of the quota root
          */
         throw new NotImplementedException();
     }
 
     @Override
-    public void setMaxMessage(QuotaRoot quotaRoot, long maxMessageCount) throws MailboxException {
+    public long getCurrentStorage(QuotaRoot quotaRoot) throws MailboxException {
         /*
         Question 6
 
-        Persist a new MaxUserMessageCount for this quotaRoot.
-        Wrap it into a transaction.
+        Using retrieveUserQuota return the current size of the quota root
          */
         throw new NotImplementedException();
     }
 
     @Override
-    public void setDefaultMaxStorage(long defaultMaxStorage) throws MailboxException {
+    public void increase(QuotaRoot quotaRoot, long count, long size) throws MailboxException {
         /*
         Question 7
 
-        Persist a new MaxDefaultStorage.
-        Wrap it into a transaction.
+        Using retrieveUserQuota, get the current quota
+
+        Then create a new one. Add count and size to it.
+
+        Persist it.
+
+        Wrap the entire method into a transaction.
          */
         throw new NotImplementedException();
     }
 
     @Override
-    public void setDefaultMaxMessage(long defaultMaxMessageCount) throws MailboxException {
+    public void decrease(QuotaRoot quotaRoot, long count, long size) throws MailboxException {
         /*
         Question 8
 
-        Persist a new MaxDefaultMessageCount.
-        Wrap it into a transaction.
+        Using retrieveUserQuota, get the current quota
+
+        Then create a new one. Minus count and size to it.
+
+        Persist it.
+
+        Wrap the entire method into a transaction.
          */
         throw new NotImplementedException();
     }
 
-    @Override
-    public long getDefaultMaxStorage() throws MailboxException {
+    private JpaCurrentQuota retrieveUserQuota(QuotaRoot quotaRoot) {
         /*
-        Question 1 :
+        Question 5
 
-         Retrieve the stored MaxDefaultStorage. You can use its DEFAULT_KEY.
-         Provide a default value if absent.
-         */
-        throw new NotImplementedException();
-    }
+        Write the code to retrieve the quota associated to the quotaRoot.
 
-    @Override
-    public long getDefaultMaxMessage() throws MailboxException {
-        /*
-        Question 2 :
-
-         Retrieve the stored MaxDefaultMessageCount. You can use its DEFAULT_KEY.
-         Provide a default value if absent.
-         */
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public long getMaxStorage(QuotaRoot quotaRoot) throws MailboxException {
-        /*
-        Question 3 :
-
-         Retrieve the stored MaxUserStorage for this quotaRoot.
-         Provide a default value if absent.
-         */
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public long getMaxMessage(QuotaRoot quotaRoot) throws MailboxException {
-        /*
-        Question 4 :
-
-         Retrieve the stored MaxUserMessageCount for this quotaRoot.
-         Provide a default value if absent.
+        No need to wrap it into a transaction.
          */
         throw new NotImplementedException();
     }

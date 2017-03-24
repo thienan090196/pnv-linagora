@@ -17,25 +17,49 @@
  * under the License.                                           *
  ****************************************************************/
 
-package com.linagora.pnv.jpa.quota;
+package com.linagora.pnv.jpa.quota.model;
 
-import javax.persistence.Persistence;
+/*
+Question 4
 
-import org.junit.After;
+Define your table. You can have a look for instance to org.apache.james.mailbox.jpa.mail.model.JPAUserFlag
+ */
+public class JpaCurrentQuota {
+    /*
+    Question 1
 
-import com.linagora.pnv.GenericMaxQuotaManagerTest;
-import com.linagora.pnv.MaxQuotaManager;
+    Add primary key annotations for quota root
+     */
+    private String quotaRoot;
 
-public class JPAPerUserMaxQuotaTest extends GenericMaxQuotaManagerTest {
+    /*
+    Question 2
 
-    @Override
-    protected MaxQuotaManager provideMaxQuotaManager() {
-        return new JPAPerUserMaxQuotaManager(Persistence.createEntityManagerFactory("global"));
+    Add a column for message count
+     */
+    private long messageCount;
+
+    /*
+    Question 3
+
+    Add a column for size
+     */
+    private long size;
+
+    public JpaCurrentQuota() {
     }
 
-    @After
-    public void cleanUp() {
-        new EntityManagerFactorySupplier().clear();
+    public JpaCurrentQuota(String quotaRoot, long messageCount, long size) {
+        this.quotaRoot = quotaRoot;
+        this.messageCount = messageCount;
+        this.size = size;
     }
 
+    public long getMessageCount() {
+        return messageCount;
+    }
+
+    public long getSize() {
+        return size;
+    }
 }
