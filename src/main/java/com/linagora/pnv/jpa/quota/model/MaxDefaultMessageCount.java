@@ -17,15 +17,38 @@
  * under the License.                                           *
  ****************************************************************/
 
-package com.linagora.pnv.memory.quota;
+package com.linagora.pnv.jpa.quota.model;
 
-import com.linagora.pnv.GenericMaxQuotaManagerTest;
-import com.linagora.pnv.MaxQuotaManager;
+/*
+Question 1 :
 
-public class InMemoryPerUserMaxQuotaManagerTest extends GenericMaxQuotaManagerTest {
+Add the JPA table definition. You can have a look in org.apache.james.mailbox.jpa.mail.model.JPAUserFlag
+ */
+public class MaxDefaultMessageCount {
+    public static final String DEFAULT_KEY = "default_key";
+    /*
+    Question 2 :
 
-    protected MaxQuotaManager provideMaxQuotaManager() {
-        return new InMemoryPerUserMaxQuotaManager();
+    Add quotaRoot as a primary key
+     */
+    private String quotaRoot;
+
+    /*
+    Question 3 :
+
+    Add value as a column
+     */
+    private long value;
+
+    public MaxDefaultMessageCount(long value) {
+        this.quotaRoot = DEFAULT_KEY;
+        this.value = value;
     }
 
+    public MaxDefaultMessageCount() {
+    }
+
+    public long getValue() {
+        return value;
+    }
 }

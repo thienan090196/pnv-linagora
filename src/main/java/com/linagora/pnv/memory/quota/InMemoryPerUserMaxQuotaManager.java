@@ -16,15 +16,15 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package org.apache.james.mailbox.inmemory.quota;
+package com.linagora.pnv.memory.quota;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.james.mailbox.quota.MaxQuotaManager;
-import org.apache.james.mailbox.exception.MailboxException;
-import org.apache.james.mailbox.model.Quota;
-import org.apache.james.mailbox.model.QuotaRoot;
+import com.linagora.pnv.MailboxException;
+import com.linagora.pnv.MaxQuotaManager;
+import com.linagora.pnv.Quota;
+import com.linagora.pnv.QuotaRoot;
 
 public class InMemoryPerUserMaxQuotaManager implements MaxQuotaManager {
 

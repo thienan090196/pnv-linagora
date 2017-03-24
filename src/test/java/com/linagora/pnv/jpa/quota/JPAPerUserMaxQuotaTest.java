@@ -17,18 +17,20 @@
  * under the License.                                           *
  ****************************************************************/
 
-package org.apache.james.mailbox.jpa.quota;
+package com.linagora.pnv.jpa.quota;
 
-import org.apache.james.mailbox.jpa.EntityManagerFactorySupplier;
-import org.apache.james.mailbox.quota.MaxQuotaManager;
-import org.apache.james.mailbox.store.quota.GenericMaxQuotaManagerTest;
+import javax.persistence.Persistence;
+
 import org.junit.After;
+
+import com.linagora.pnv.GenericMaxQuotaManagerTest;
+import com.linagora.pnv.MaxQuotaManager;
 
 public class JPAPerUserMaxQuotaTest extends GenericMaxQuotaManagerTest {
 
     @Override
     protected MaxQuotaManager provideMaxQuotaManager() {
-        return new JPAPerUserMaxQuotaManager(new EntityManagerFactorySupplier().get());
+        return new JPAPerUserMaxQuotaManager(Persistence.createEntityManagerFactory("global"));
     }
 
     @After
