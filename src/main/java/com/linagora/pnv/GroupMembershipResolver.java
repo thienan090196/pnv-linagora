@@ -16,16 +16,17 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
+package com.linagora.pnv;
 
-package org.apache.james.mailbox.inmemory.quota;
+/**
+ * An interface for querying group memberships.  
+ */
+public interface GroupMembershipResolver {
 
-import org.apache.james.mailbox.quota.MaxQuotaManager;
-import org.apache.james.mailbox.store.quota.GenericMaxQuotaManagerTest;
+    boolean isMember(String user, String group);
 
-public class InMemoryPerUserMaxQuotaManagerTest extends GenericMaxQuotaManagerTest {
+    public void addMembership(String group, String user);
 
-    protected MaxQuotaManager provideMaxQuotaManager() {
-        return new InMemoryPerUserMaxQuotaManager();
-    }
+    public void removeMembership(String group, String user);
 
 }
