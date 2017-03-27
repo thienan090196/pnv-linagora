@@ -35,7 +35,7 @@ public class JPAPerUserMaxQuotaTest extends GenericMaxQuotaManagerTest {
 
     @After
     public void cleanUp() {
-        new EntityManagerFactorySupplier().clear();
+        /* TODO delete the table */
     }
 
 }
