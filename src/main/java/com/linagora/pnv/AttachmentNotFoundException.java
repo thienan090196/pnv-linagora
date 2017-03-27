@@ -16,17 +16,18 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
+
 package com.linagora.pnv;
 
-/**
- * An interface for querying group memberships.  
- */
-public interface GroupMembershipResolver {
+public class AttachmentNotFoundException extends MailboxException {
 
-    boolean isMember(String user, String group);
+    private final String attachmentId;
 
-    public void addMembership(String group, String user);
+    public AttachmentNotFoundException(String attachmentId) {
+        this.attachmentId = attachmentId;
+    }
 
-    public void removeMembership(String group, String user);
-
+    public final String getAttachmentId() {
+        return attachmentId;
+    }
 }
