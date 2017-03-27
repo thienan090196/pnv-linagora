@@ -16,29 +16,27 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-package com.linagora.pnv.jpa;
-
-
-import java.io.Serializable;
+package com.linagora.pnv.memory;
 
 import com.linagora.pnv.MailboxId;
 
-public class JPAId implements MailboxId {
+public class InMemoryId implements MailboxId {
 
     public static class Factory implements MailboxId.Factory {
+        
         @Override
-        public JPAId fromString(String serialized) {
+        public MailboxId fromString(String serialized) {
             return of(Long.valueOf(serialized));
         }
     }
-
-    public static JPAId of(long value) {
-        return new JPAId(value);
+    
+    public static InMemoryId of(long value) {
+        return new InMemoryId(value);
     }
 
     private final long value;
 
-    public JPAId(long value) {
+    private InMemoryId(long value) {
         this.value = value;
     }
 
@@ -51,7 +49,7 @@ public class JPAId implements MailboxId {
     public String toString() {
         return String.valueOf(value);
     }
-    
+
     public long getRawId() {
         return value;
     }
@@ -72,10 +70,10 @@ public class JPAId implements MailboxId {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        JPAId other = (JPAId) obj;
+        InMemoryId other = (InMemoryId) obj;
         if (value != other.value)
             return false;
         return true;
     }
-    
+
 }

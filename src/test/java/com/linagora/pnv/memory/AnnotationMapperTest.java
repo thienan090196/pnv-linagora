@@ -17,18 +17,13 @@
  * under the License.                                           *
  ****************************************************************/
 
-package com.linagora.pnv.jpa;
+package com.linagora.pnv.memory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Random;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import org.junit.After;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -67,17 +62,14 @@ public class AnnotationMapperTest {
 
     @Before
     public void setUp() {
-        this.annotationMapper = new JPAAnnotationMapper(Persistence.createEntityManagerFactory("global"));
-        this.mailboxId = JPAId.of(Math.abs(new Random().nextInt()));
+        this.annotationMapper = new InMemoryAnnotationMapper();
+        this.mailboxId = InMemoryId.of(Math.abs(new Random().nextInt()));
     }
 
     @After
     public void tearDown() {
-        EntityManager entityManager = Persistence.createEntityManagerFactory("global").createEntityManager();
-        entityManager.getTransaction().begin();
-        entityManager.createNativeQuery("TRUNCATE table JAMES_MAILBOX_ANNOTATION;").executeUpdate();
-        entityManager.getTransaction().commit();
-        entityManager.close();    }
+
+    }
 
     @Test
     public void insertAnnotationShouldThrowExceptionWithNilData() {
