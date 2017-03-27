@@ -17,15 +17,16 @@
  * under the License.                                           *
  ****************************************************************/
 
-package org.apache.james.mailbox.inmemory.quota;
+package com.linagora.pnv.event;
 
-import org.apache.james.mailbox.quota.MaxQuotaManager;
-import org.apache.james.mailbox.store.quota.GenericMaxQuotaManagerTest;
+import java.util.Set;
 
-public class InMemoryPerUserMaxQuotaManagerTest extends GenericMaxQuotaManagerTest {
+public interface DistantMailboxPathRegisterMapper {
 
-    protected MaxQuotaManager provideMaxQuotaManager() {
-        return new InMemoryPerUserMaxQuotaManager();
-    }
+    Set<Topic> getTopics(MailboxPath mailboxPath);
+
+    void doRegister(MailboxPath mailboxPath, Topic topic);
+
+    void doUnRegister(MailboxPath mailboxPath, Topic topic);
 
 }
