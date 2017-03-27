@@ -16,38 +16,66 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
+package com.linagora.pnv.jpa;
 
-package com.linagora.pnv;
 
-import com.google.common.base.Objects;
+import java.io.Serializable;
 
-public class QuotaRootImpl implements QuotaRoot {
+import com.linagora.pnv.MailboxId;
 
-    public static QuotaRoot quotaRoot(String value) {
-        return new QuotaRootImpl(value);
+public class JPAId implements MailboxId {
+
+    public static class Factory implements MailboxId.Factory {
+        @Override
+        public JPAId fromString(String serialized) {
+            return of(Long.valueOf(serialized));
+        }
     }
 
-    private final String value;
+    public static JPAId of(long value) {
+        return new JPAId(value);
+    }
 
-    private QuotaRootImpl(String value) {
+    private final long value;
+
+    public JPAId(long value) {
         this.value = value;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || !(o instanceof QuotaRoot)) {
-            return false;
-        }
-        return value.equals(((QuotaRoot) o).getValue());
+    public String serialize() {
+        return String.valueOf(value);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
+    
+    public long getRawId() {
+        return value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(value);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (value ^ (value >>> 32));
+        return result;
     }
 
-    public String getValue() {
-        return value;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        JPAId other = (JPAId) obj;
+        if (value != other.value)
+            return false;
+        return true;
     }
-
+    
 }

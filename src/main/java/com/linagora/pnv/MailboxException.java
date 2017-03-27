@@ -17,15 +17,25 @@
  * under the License.                                           *
  ****************************************************************/
 
-package org.apache.james.mailbox.inmemory.quota;
+package com.linagora.pnv;
 
-import org.apache.james.mailbox.quota.MaxQuotaManager;
-import org.apache.james.mailbox.store.quota.GenericMaxQuotaManagerTest;
+/**
+ * Mailbox services should throw this exception in case of unsuccessfull
+ * operation.
+ */
+public class MailboxException extends Exception {
 
-public class InMemoryPerUserMaxQuotaManagerTest extends GenericMaxQuotaManagerTest {
+    private static final long serialVersionUID = 4612761817238115904L;
 
-    protected MaxQuotaManager provideMaxQuotaManager() {
-        return new InMemoryPerUserMaxQuotaManager();
+    public MailboxException() {
+        super();
     }
 
+    public MailboxException(String message) {
+        super(message);
+    }
+
+    public MailboxException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 }

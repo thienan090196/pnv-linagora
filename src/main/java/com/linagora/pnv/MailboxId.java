@@ -18,45 +18,11 @@
  ****************************************************************/
 package com.linagora.pnv;
 
-/**
- * A {@link Quota} restriction
- */
-public interface Quota {
-
-    /**
-     * Unlimited value
-     */
-    long UNLIMITED = -1;
-
-    /**
-     * Value not known
-     */
-    long UNKNOWN = Long.MIN_VALUE;
-
-    /**
-     * Return the maximum value for the {@link Quota}
-     *
-     * @return max
-     */
-    long getMax();
-
-    /**
-     * Return the currently used for the {@link Quota}
-     *
-     * @return used
-     */
-    long getUsed();
-
-    /**
-     *  Adds the value to the quota.
-     */
-    void addValueToQuota(long value);
-
-    /**
-     * Tells us if the quota is reached
-     *
-     * @return True if the user over uses the resource of this quota
-     */
-    boolean isOverQuota();
-
+public interface MailboxId {
+    
+    interface Factory {
+        MailboxId fromString(String serialized);
+    }
+    
+    String serialize();
 }

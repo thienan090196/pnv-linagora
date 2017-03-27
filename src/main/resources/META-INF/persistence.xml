@@ -26,12 +26,7 @@
     <persistence-unit name="global" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
-        <class>eu.tsp.asr.middleware.mini.projet.jpa.mailbox.model.JPAMailbox</class>
-        <class>eu.tsp.asr.middleware.mini.projet.jpa.mailbox.model.JPAStoredMessage</class>
-        <class>eu.tsp.asr.middleware.mini.projet.jpa.user.model.JPAUser</class>
-        <class>eu.tsp.asr.middleware.mini.projet.jpa.user.model.JPARight</class>
-        <class>eu.tsp.asr.middleware.mini.projet.jpa.user.model.JPAToken</class>
-
+        <class>com.linagora.pnv.jpa.JPAMailboxAnnotation</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
 
         <properties>

@@ -17,23 +17,49 @@
  * under the License.                                           *
  ****************************************************************/
 
-package org.apache.james.mailbox.jpa.quota;
+package com.linagora.pnv;
 
-import org.apache.james.mailbox.jpa.EntityManagerFactorySupplier;
-import org.apache.james.mailbox.quota.MaxQuotaManager;
-import org.apache.james.mailbox.store.quota.GenericMaxQuotaManagerTest;
-import org.junit.After;
-
-public class JPAPerUserMaxQuotaTest extends GenericMaxQuotaManagerTest {
-
-    @Override
-    protected MaxQuotaManager provideMaxQuotaManager() {
-        return new JPAPerUserMaxQuotaManager(new EntityManagerFactorySupplier().get());
+/**
+ * Mapper which execute units of work in a {@link Transaction}
+ *
+ */
+public interface Mapper {
+    
+    /**
+     * IMAP Request was complete. Cleanup all Request scoped stuff
+     */
+    void endRequest();
+    
+    /**
+     * Execute the given Transaction
+     * 
+     * @param transaction 
+     * @throws MailboxException
+     */
+    <T> T execute(Transaction<T> transaction) throws MailboxException;
+        
+    /**
+     * Unit of work executed in a Transaction
+     *
+     */
+    interface Transaction<T> {
+        
+        /**
+         * Run unit of work in a Transaction and return a value
+         * 
+         * @throws MailboxException
+         */
+        T run() throws MailboxException;
     }
+    
+    
+    abstract class VoidTransaction implements Transaction<Void> {
+        
+        public final Void run() throws MailboxException {
+            runVoid();
+            return null;
+        }
+        public abstract void runVoid() throws MailboxException;
 
-    @After
-    public void cleanUp() {
-        new EntityManagerFactorySupplier().clear();
     }
-
 }
