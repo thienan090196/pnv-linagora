@@ -16,18 +16,43 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
+
 package com.linagora.pnv;
 
-import java.util.Collection;
-import java.util.List;
+/**
+ * Indicates that the failure is caused by a reference to a mailbox which does
+ * not exist.
+ */
+public class MailboxNotFoundException extends MailboxException {
 
-public interface AttachmentMapper extends Mapper {
+    private static final long serialVersionUID = -8493370806722264915L;
 
-    Attachment getAttachment(AttachmentId attachmentId) throws AttachmentNotFoundException;
+    private final String mailboxName;
 
-    List<Attachment> getAttachments(Collection<AttachmentId> attachmentIds);
+    /**
+     * @param mailboxName
+     *            name of the mailbox, not null
+     */
+    public MailboxNotFoundException(String mailboxName) {
+        this.mailboxName = mailboxName;
+    }
 
-    void storeAttachment(Attachment attachment) throws MailboxException;
+    /**
+     * @param mailboxPath
+     *            name of the mailbox, not null
+     */
+    public MailboxNotFoundException(MailboxPath mailboxPath) {
+        super(mailboxPath + " can not be found");
+        this.mailboxName = mailboxPath.toString();
+    }
 
-    void storeAttachments(Collection<Attachment> attachments) throws MailboxException;
+    /**
+     * Gets the name of the mailbox which cannot be found.
+     * 
+     * @return name or null when only mailbox ID is known
+     */
+    public final String getMailboxName() {
+        return mailboxName;
+    }
+
 }

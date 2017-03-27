@@ -16,57 +16,35 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
+
 package com.linagora.pnv;
 
 
-import org.apache.commons.codec.digest.DigestUtils;
+/**
+ * Indicates that the operation failed since the mailbox already exists.
+ */
+public class MailboxExistsException extends MailboxException {
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+    private static final long serialVersionUID = -486951759505030166L;
 
-public class AttachmentId {
+    private final String mailboxName;
 
-    public static AttachmentId forPayload(byte[] payload) {
-        Preconditions.checkArgument(payload != null);
-        return new AttachmentId(DigestUtils.sha1Hex(payload));
+    public MailboxExistsException(String mailboxName) {
+        super("Mailbox with name=" + mailboxName + " already exists.");
+        this.mailboxName = mailboxName;
     }
 
-    public static AttachmentId from(String id) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(id));
-        return new AttachmentId(id);
+    /**
+     * Gets the name of the mailbox which already exists.
+     * 
+     * @return the mailboxName, not null
+     */
+    public final String getMailboxName() {
+        return mailboxName;
     }
 
-    private final String id;
-
-    private AttachmentId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof AttachmentId) {
-            AttachmentId other = (AttachmentId) obj;
-            return Objects.equal(id, other.id);
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
-
-    @Override
     public String toString() {
-        return MoreObjects
-                .toStringHelper(this)
-                .add("id", id)
-                .toString();
+        return getMessage();
     }
+
 }

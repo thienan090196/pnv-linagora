@@ -16,18 +16,13 @@
  * specific language governing permissions and limitations      *
  * under the License.                                           *
  ****************************************************************/
-
 package com.linagora.pnv;
 
-public class AttachmentNotFoundException extends MailboxException {
+public class MailboxUtil {
 
-    private final String attachmentId;
-
-    public AttachmentNotFoundException(String attachmentId) {
-        this.attachmentId = attachmentId;
-    }
-
-    public final String getAttachmentId() {
-        return attachmentId;
+    public static boolean isMailboxChildOf(Mailbox mailbox, Mailbox potentialParent, MailboxSession mailboxSession) {
+        return mailbox.getNamespace().equals(potentialParent.getNamespace())
+            && mailbox.getUser().equals(potentialParent.getUser())
+            && mailbox.getName().startsWith(potentialParent.getName() + mailboxSession.getPathDelimiter());
     }
 }
