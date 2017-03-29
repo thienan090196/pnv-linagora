@@ -22,6 +22,10 @@ package com.linagora.pnv.jpa.event;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.concurrent.TimeUnit;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +50,11 @@ public class JpaMailboxPathRegistrerMapperTest {
 
     @After
     public void tearDown() {
-
+    	EntityManager entityManager = Persistence.createEntityManagerFactory("global").createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("TRUNCATE table JPA_REGISTRATION;").executeUpdate();
+        entityManager.getTransaction().commit();
+        entityManager.close();
     }
 
     @Test
@@ -76,7 +84,7 @@ public class JpaMailboxPathRegistrerMapperTest {
     @Test
     public void doUnRegisterShouldWork() {
         mapper.doRegister(MAILBOX_PATH, TOPIC);
-        mapper.doUnRegister(MAILBOX_PATH, TOPIC);
+        mapper.doUnRegister(MAILBOX_PATH, TOPIC); 
         assertThat(mapper.getTopics(MAILBOX_PATH)).isEmpty();
     }
 
