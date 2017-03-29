@@ -1,40 +1,97 @@
 package com.linagora.pnv.jpa.event;
 
+import java.util.Date;
 import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.base.Throwables;
 
 import com.linagora.pnv.event.DistantMailboxPathRegisterMapper;
 import com.linagora.pnv.event.MailboxPath;
 import com.linagora.pnv.event.Topic;
+import com.linagora.pnv.jpa.event.JPARegistration.JPARegistrationId;
 
 public class JPAMailboxPathRegisterMapper implements DistantMailboxPathRegisterMapper {
 
     private final int timeOutInSeconds;
-
+    private final EntityManager entityManager;
+    
+    public static final Function<JPARegistration, Topic> READ_ROW = new Function<JPARegistration, Topic>() {
+       
+		@Override
+		public Topic apply(JPARegistration input) {
+			return new Topic(input.getTopic());
+		}
+    };
+    
     public JPAMailboxPathRegisterMapper(int timeOutInSeconds) {
         this.timeOutInSeconds = timeOutInSeconds;
+        this.entityManager = Persistence.createEntityManagerFactory("global").createEntityManager();
     }
 
     @Override
     public Set<Topic> getTopics(MailboxPath mailboxPath) {
-        /*
-        Return the list of topics for this mailboxPath
-         */
-        return null;
+    	return FluentIterable.from(entityManager.createNamedQuery("retriveAllTopicsInMailbox", JPARegistration.class)
+    			.setParameter("idMailboxPath", mailboxPath.asString()).getResultList())
+    			.filter(new Predicate <JPARegistration>() {
+    				public boolean apply(JPARegistration input) {
+    					return input.getExpireDate().after(new Date());
+    				}
+    			})
+    			.transform(READ_ROW)
+    			.toSet();
     }
 
     @Override
     public void doRegister(MailboxPath mailboxPath, Topic topic) {
-        /*
-        Add a topic to the mailboxPath.
-
-        Result will be returned for timeOutInSeconds
-         */
+    	entityManager.getTransaction().begin();
+    	
+    	JPARegistration jpaRegistration = entityManager
+    			.find(JPARegistration.class, new JPARegistrationId(
+    					mailboxPath.asString(), 
+    					topic.getValue()));
+    	if (jpaRegistration == null) {
+    		entityManager
+    			.persist(new JPARegistration(
+    					mailboxPath.asString(), 
+    					topic.getValue(), 
+    					computeExpireDate()));
+    	} else {
+    		jpaRegistration.setMailboxPath(mailboxPath.asString());
+    		jpaRegistration.setTopic(topic.getValue());
+    	}   	
+    	entityManager.getTransaction().commit();
+    }
+    
+    private Date computeExpireDate() {
+    	 Date now = new Date();
+    	 now.setSeconds(now.getSeconds() + timeOutInSeconds);
+    	 return now;
     }
 
     @Override
     public void doUnRegister(MailboxPath mailboxPath, Topic topic) {
-        /*
-        Remove the registration
-         */
+        try {
+            entityManager.getTransaction().begin();
+            JPARegistration jpaRegistration = entityManager
+                .find(JPARegistration.class, new JPARegistrationId(
+                		mailboxPath.asString(), 
+    					topic.getValue()));
+            if (jpaRegistration != null) {
+            	entityManager.remove(jpaRegistration);
+            }
+            entityManager.getTransaction().commit();
+        } catch (NoResultException e) {
+        	
+        } catch (PersistenceException pe) {
+            throw Throwables.propagate(pe);
+        }
     }
 }
