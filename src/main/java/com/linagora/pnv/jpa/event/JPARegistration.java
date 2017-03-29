@@ -1,7 +1,11 @@
 package com.linagora.pnv.jpa.event;
 
 import java.io.Serializable;
+
 import java.util.Date;
+
+import java.lang.Object;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,18 +15,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-/*
- * TODO
- *
- * Modify this class to store it this JPA.
- *
- * Use it in jpa.event.JPAMailboxPathRegisterMapper
- */
+import com.google.common.base.Objects;
+
 
 @Entity(name="JPARegistration")
 @Table(name="JPA_REGISTRATION")
 @NamedQueries({
-	@NamedQuery(name = "retriveAllTopicsInMailbox", query = "SELECT registration FROM JPARegistration registration WHERE registration.mailboxPath = :idMailboxPath")
+	@NamedQuery(name = "retriveAllTopicsForMailbox", query = "SELECT registration FROM JPARegistration registration WHERE registration.mailboxPath = :idMailboxPath")
 })
 
 @IdClass(JPARegistration.JPARegistrationId.class)
@@ -55,29 +54,18 @@ public class JPARegistration {
 			int result = 1;
 			result = prime * result + ((mailboxPath == null) ? 0 : mailboxPath.hashCode());
 			result = prime * result + ((topic == null) ? 0 : topic.hashCode());
-			return result;
+			return Objects.hashCode(mailboxPath, topic);
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			JPARegistrationId other = (JPARegistrationId) obj;
-			if (mailboxPath == null) {
-				if (other.mailboxPath != null)
-					return false;
-			} else if (!mailboxPath.equals(other.mailboxPath))
-				return false;
-			if (topic == null) {
-				if (other.topic != null)
-					return false;
-			} else if (!topic.equals(other.topic))
-				return false;
-			return true;
+			if  (obj instanceof JPARegistrationId) {
+			    JPARegistrationId that = (JPARegistrationId ) obj;
+
+			    return Objects.equal(this.topic, that.topic) 
+			    	&& Objects.equal(this.mailboxPath, that.mailboxPath);
+			}
+			return false;
 		}
 	}
 	
@@ -111,25 +99,13 @@ public class JPARegistration {
 		return mailboxPath;
 	}
 
-	public void setMailboxPath(String mailboxPath) {
-		this.mailboxPath = mailboxPath;
-	}
-
 	public Date getExpireDate() {
 		return expireDate;
-	}
-
-	public void setExpireDate(Date expireDate) {
-		this.expireDate = expireDate;
 	}
 
     public String getTopic() {
     	return topic;
     }
-    
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
 
 	@Override
 	public int hashCode() {
@@ -138,33 +114,18 @@ public class JPARegistration {
 		result = prime * result + ((expireDate == null) ? 0 : expireDate.hashCode());
 		result = prime * result + ((mailboxPath == null) ? 0 : mailboxPath.hashCode());
 		result = prime * result + ((topic == null) ? 0 : topic.hashCode());
-		return result;
+		return Objects.hashCode(mailboxPath, topic, expireDate);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		JPARegistration other = (JPARegistration) obj;
-		if (expireDate == null) {
-			if (other.expireDate != null)
-				return false;
-		} else if (!expireDate.equals(other.expireDate))
-			return false;
-		if (mailboxPath == null) {
-			if (other.mailboxPath != null)
-				return false;
-		} else if (!mailboxPath.equals(other.mailboxPath))
-			return false;
-		if (topic == null) {
-			if (other.topic != null)
-				return false;
-		} else if (!topic.equals(other.topic))
-			return false;
-		return true;
+		if  (obj instanceof JPARegistration) {
+		    JPARegistration that = (JPARegistration) obj;
+
+		    return Objects.equal(this.topic, that.topic) 
+		    	&& Objects.equal(this.mailboxPath, that.mailboxPath)
+		    	&& Objects.equal(this.expireDate, that.expireDate);
+		}
+		return false;
 	}
 }
