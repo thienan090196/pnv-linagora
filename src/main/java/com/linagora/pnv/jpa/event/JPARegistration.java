@@ -48,12 +48,11 @@ public class JPARegistration {
 			return topic;
 		}
 
+		
+		
+		
 		@Override
 		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ((mailboxPath == null) ? 0 : mailboxPath.hashCode());
-			result = prime * result + ((topic == null) ? 0 : topic.hashCode());
 			return Objects.hashCode(mailboxPath, topic);
 		}
 
@@ -109,11 +108,6 @@ public class JPARegistration {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((expireDate == null) ? 0 : expireDate.hashCode());
-		result = prime * result + ((mailboxPath == null) ? 0 : mailboxPath.hashCode());
-		result = prime * result + ((topic == null) ? 0 : topic.hashCode());
 		return Objects.hashCode(mailboxPath, topic, expireDate);
 	}
 
