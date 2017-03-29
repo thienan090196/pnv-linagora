@@ -53,15 +53,9 @@ public class JPAMailboxPathRegisterMapper implements DistantMailboxPathRegisterM
     public void doRegister(MailboxPath mailboxPath, Topic topic) {
     	entityManager.getTransaction().begin();
     	
-    	JPARegistration jpaRegistration = entityManager
-    			.find(JPARegistration.class, new JPARegistrationId(
-    					mailboxPath.asString(), 
-    					topic.getValue()));
-  	
-    	if (jpaRegistration == null) {
-    		entityManager
-    			.merge(new JPARegistration(mailboxPath.asString(), topic.getValue(), computeExpireDate()));
-    	} 	
+    	JPARegistration jpaRegistration = new JPARegistration(mailboxPath.asString(), topic.getValue(), computeExpireDate());
+    	entityManager
+    		.merge(jpaRegistration);
     	entityManager.getTransaction().commit();
     }
     
