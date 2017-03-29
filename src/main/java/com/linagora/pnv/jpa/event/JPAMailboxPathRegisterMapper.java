@@ -38,7 +38,7 @@ public class JPAMailboxPathRegisterMapper implements DistantMailboxPathRegisterM
 
     @Override
     public Set<Topic> getTopics(MailboxPath mailboxPath) {
-    	return FluentIterable.from(entityManager.createNamedQuery("retriveAllTopicsInMailbox", JPARegistration.class)
+    	return FluentIterable.from(entityManager.createNamedQuery("retriveAllTopicsForMailbox", JPARegistration.class)
     			.setParameter("idMailboxPath", mailboxPath.asString()).getResultList())
     			.filter(new Predicate <JPARegistration>() {
     				public boolean apply(JPARegistration input) {
@@ -57,16 +57,11 @@ public class JPAMailboxPathRegisterMapper implements DistantMailboxPathRegisterM
     			.find(JPARegistration.class, new JPARegistrationId(
     					mailboxPath.asString(), 
     					topic.getValue()));
+  	
     	if (jpaRegistration == null) {
     		entityManager
-    			.persist(new JPARegistration(
-    					mailboxPath.asString(), 
-    					topic.getValue(), 
-    					computeExpireDate()));
-    	} else {
-    		jpaRegistration.setMailboxPath(mailboxPath.asString());
-    		jpaRegistration.setTopic(topic.getValue());
-    	}   	
+    			.merge(new JPARegistration(mailboxPath.asString(), topic.getValue(), computeExpireDate()));
+    	} 	
     	entityManager.getTransaction().commit();
     }
     
