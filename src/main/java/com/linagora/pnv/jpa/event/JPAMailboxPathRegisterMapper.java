@@ -69,15 +69,13 @@ public class JPAMailboxPathRegisterMapper implements DistantMailboxPathRegisterM
     public void doUnRegister(MailboxPath mailboxPath, Topic topic) {
         try {
             entityManager.getTransaction().begin();
-            JPARegistration jpaRegistration = entityManager
-                .find(JPARegistration.class, new JPARegistrationId(
-                		mailboxPath.asString(), 
-    					topic.getValue()));
-            if (jpaRegistration != null) {
-            	entityManager.remove(jpaRegistration);
-            }
+            entityManager.createNamedQuery("deleteRegistration")
+            	.setParameter("idMailboxPath", mailboxPath.asString())
+            	.setParameter("idTopic", topic.getValue())
+            	.executeUpdate();
             entityManager.getTransaction().commit();
         } catch (NoResultException e) {
+        	
         	
         } catch (PersistenceException pe) {
             throw Throwables.propagate(pe);
