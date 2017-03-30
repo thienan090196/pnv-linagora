@@ -11,6 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -21,9 +23,13 @@ import com.google.common.base.Objects;
 @Entity(name="JPARegistration")
 @Table(name="JPA_REGISTRATION")
 @NamedQueries({
-	@NamedQuery(name = "retriveAllTopicsForMailbox", query = "SELECT registration FROM JPARegistration registration WHERE registration.mailboxPath = :idMailboxPath")
+	@NamedQuery(name = "deleteRegistration", 
+			query = "DELETE FROM JPARegistration registration "
+					+ "WHERE registration.mailboxPath = :idMailboxPath AND registration.topic = :idTopic"),
+	@NamedQuery(name = "retriveAllTopicsForMailbox", 
+			query = "SELECT registration FROM JPARegistration registration "
+					+ "WHERE registration.mailboxPath = :idMailboxPath"),
 })
-
 @IdClass(JPARegistration.JPARegistrationId.class)
 public class JPARegistration {
 
@@ -108,7 +114,7 @@ public class JPARegistration {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(mailboxPath, topic, expireDate);
+		return Objects.hashCode(mailboxPath, topic);
 	}
 
 	@Override
@@ -117,8 +123,7 @@ public class JPARegistration {
 		    JPARegistration that = (JPARegistration) obj;
 
 		    return Objects.equal(this.topic, that.topic) 
-		    	&& Objects.equal(this.mailboxPath, that.mailboxPath)
-		    	&& Objects.equal(this.expireDate, that.expireDate);
+		    	&& Objects.equal(this.mailboxPath, that.mailboxPath);
 		}
 		return false;
 	}
