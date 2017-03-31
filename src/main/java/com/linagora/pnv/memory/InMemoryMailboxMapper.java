@@ -21,10 +21,13 @@ package com.linagora.pnv.memory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Objects;
+
 import com.linagora.pnv.Mailbox;
 import com.linagora.pnv.MailboxACL;
 import com.linagora.pnv.MailboxException;
@@ -52,50 +55,24 @@ public class InMemoryMailboxMapper implements MailboxMapper {
         mailboxesById.clear();
     }
 
-    /*
-    TODO Rewrite this java 8 style with .stream() map filter findFirst
-     */
     public synchronized Mailbox findMailboxByPath(MailboxPath path) throws MailboxException {
-        Mailbox result = null;
-        for (Mailbox mailbox:mailboxesById.values()) {
-            MailboxPath mp = new MailboxPath(mailbox.getNamespace(), mailbox.getUser(), mailbox.getName());
-            if (mp.equals(path)) {
-                result = mailbox;
-                break;
-            }
-        }
-        if (result == null) {
-            throw new MailboxNotFoundException(path);
-        } else {
-            return result;
-        }
+        return mailboxesById.values()
+        			.stream()
+        			.filter(mailbox -> mailbox.generateAssociatedPath().equals(path))
+        			.findFirst()
+        			.orElseThrow(() -> new MailboxNotFoundException(path));
     }
 
-    /*
-    TODO rewrite this with java-8 optionals
-     */
     public synchronized Mailbox findMailboxById(MailboxId id) throws MailboxException {
-        InMemoryId mailboxId = (InMemoryId)id;
-        Mailbox result = mailboxesById.get(mailboxId);
-        if (result == null) {
-            throw new MailboxNotFoundException(mailboxId.serialize());
-        } else {
-            return result;
-        }
+    	return Optional.ofNullable(mailboxesById.get(id))
+    			.orElseThrow(() -> new MailboxNotFoundException(id.serialize()));
     }
 
-    /*
-    TODO rewrite this with java-8 streams: filter, map, collect
-     */
     public List<Mailbox> findMailboxWithPathLike(MailboxPath path) throws MailboxException {
-        final String regex = path.getName().replace("%", ".*");
-        List<Mailbox> results = new ArrayList<>();
-        for (Mailbox mailbox:mailboxesById.values()) {
-            if (mailboxMatchesRegex(mailbox, path, regex)) {
-                results.add(mailbox);
-            }
-        }
-        return results;
+        return mailboxesById.values()
+        		.stream()
+        		.filter(mailbox -> mailboxMatchesRegex(mailbox, path, path.getName().replace("%", ".*")))
+        		.collect(Collectors.toList());
     }
 
     private boolean mailboxMatchesRegex(Mailbox mailbox, MailboxPath path, String regex) {
@@ -114,24 +91,14 @@ public class InMemoryMailboxMapper implements MailboxMapper {
         return mailbox.getMailboxId();
     }
 
-    /**
-     * Do nothing
-     */
     public void endRequest() {
-        // Do nothing
     }
 
-    /*
-    TODO rewrite with java 8 stream : filter, map, findAny, isEmpty...
-     */
-    public boolean hasChildren(Mailbox mailbox, char delimiter) throws MailboxException {
-        String mailboxName = mailbox.getName() + delimiter;
-        for (Mailbox box:mailboxesById.values()) {
-            if (belongsToSameUser(mailbox, box) && box.getName().startsWith(mailboxName)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean hasChildren(Mailbox mailboxParameter, char delimiter) throws MailboxException {
+    	return mailboxesById.values()
+    			.stream()
+    			.anyMatch(mailbox -> belongsToSameUser(mailboxParameter, mailbox) 
+    							  && mailbox.getName().startsWith(mailboxParameter.getName() + delimiter));		
     }
 
     private boolean belongsToSameUser(Mailbox mailbox, Mailbox otherMailbox) {
