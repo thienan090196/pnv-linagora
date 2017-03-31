@@ -69,9 +69,10 @@ public class InMemoryMailboxMapper implements MailboxMapper {
     }
 
     public List<Mailbox> findMailboxWithPathLike(MailboxPath path) throws MailboxException {
-        return mailboxesById.values()
+        final String regex = path.getName().replace("%", ".*");
+    	return mailboxesById.values()
         		.stream()
-        		.filter(mailbox -> mailboxMatchesRegex(mailbox, path, path.getName().replace("%", ".*")))
+        		.filter(mailbox -> mailboxMatchesRegex(mailbox, path, regex))
         		.collect(Collectors.toList());
     }
 
@@ -95,10 +96,11 @@ public class InMemoryMailboxMapper implements MailboxMapper {
     }
 
     public boolean hasChildren(Mailbox mailboxParameter, char delimiter) throws MailboxException {
+    	String mailboxName = mailboxParameter.getName() + delimiter;
     	return mailboxesById.values()
     			.stream()
     			.anyMatch(mailbox -> belongsToSameUser(mailboxParameter, mailbox) 
-    							  && mailbox.getName().startsWith(mailboxParameter.getName() + delimiter));		
+    							  && mailbox.getName().startsWith(mailboxName));		
     }
 
     private boolean belongsToSameUser(Mailbox mailbox, Mailbox otherMailbox) {
